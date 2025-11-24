@@ -1,9 +1,20 @@
 
+import { useState } from "react"
 import Product from "./components/product"
 import { Button } from "./components/ui/button"
-import { Card, CardContent } from "./components/ui/card"
+import { Input } from "./components/ui/input"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./components/ui/select";
 
 function App() {
+  const [products, setProducts] = useState();
+  const [cart, setCart] = useState();
+  const [cetegories, setCategories] = useState();
+  const [filter, setFilter] = useState();
+  const [search, setSearch] = useState("");
+
+  function quantityChange(productIdx: number, value: number) { }
+  function addToCart(productIdx: number) { }
+
   return (
     <div className="flex flex-col items-center h-screen gap-5">
 
@@ -11,8 +22,8 @@ function App() {
       <div className="flex justify-between w-full p-4 px-6 shadow-sm items-center static">
         <h1>P.M.A</h1>
         <div className="text-sm flex items-center">
-          <input type="text" placeholder="Search" className="border border-black rounded-l-sm px-4 py-2 w-100"></input>
-          <Button className="rounded-l-none h-9.5">Search</Button>
+          <Input type="search" placeholder="Search" className="w-60 rounded-r-none border-r-0" />
+          <Button className="rounded-l-none">Search</Button>
         </div>
         <Button>View Cart (0)</Button>
       </div>
@@ -21,7 +32,21 @@ function App() {
       <div className="mx-20 flex flex-col gap-2">
 
         <div className="flex justify-between w-full">
-          <Button>Drop Down</Button>
+          <Select onValueChange={(value) => { alert("Value changed to: " + value) }}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="All" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Product Category</SelectLabel>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="laptops">Laptops</SelectItem>
+                <SelectItem value="electronics">Electronics</SelectItem>
+                <SelectItem value="phones">Phones</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+
           <Button>Add New Product</Button>
         </div>
 
@@ -38,7 +63,6 @@ function App() {
         </div>
 
         <footer className="py-2">
-
           2025
         </footer>
 
