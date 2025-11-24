@@ -1,5 +1,7 @@
+import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
+import { toast } from "sonner";
 
 interface productProps {
   id: number;
@@ -9,8 +11,8 @@ interface productProps {
   stock: number;
   price: number;
   quantitySelected: number;
-  quantityOnChange?: (prodIdx: number, newQuantity: number) => void;
-  addToCart?(): () => void;
+  quantityOnChange?: (prodId: number, newQuantity: number) => void;
+  addToCart?: (prodId: number, qty: number) => void;
 };
 
 function Product({ id, image, name, category, stock, price, quantitySelected: quantity, quantityOnChange, addToCart }: productProps) {
@@ -64,7 +66,9 @@ function Product({ id, image, name, category, stock, price, quantitySelected: qu
                     if (quantity > 0)
                       quantityOnChange(id, quantity - 1)
                   }
-                }}>-</Button>
+                }}>
+                <Minus />
+              </Button>
 
               <p>{quantity}</p>
 
@@ -75,13 +79,24 @@ function Product({ id, image, name, category, stock, price, quantitySelected: qu
                     if (quantity < stock)
                       quantityOnChange(id, quantity + 1)
                   }
-                }}>+</Button>
+                }}>
+                <Plus />
+              </Button>
             </div>
             <Button
               onClick={(e) => {
                 e.stopPropagation();
+                if (addToCart) {
+                  if (quantity > 0) {
+                    addToCart(id, quantity);
+                    if (quantityOnChange) quantityOnChange(id, 0);
+                    toast.success(`${quantity} - ${name} added to cart`);
+                  }
+                }
               }}
-            >Cart</Button>
+            >
+              <ShoppingCart />
+            </Button>
           </div>
 
           <div>
@@ -90,12 +105,16 @@ function Product({ id, image, name, category, stock, price, quantitySelected: qu
         </CardContent>
       </Card>
 
-      {quantity > 0 &&
-        <div className="flex justify-between px-4 py-2 bg-green-400 rounded-xl mt-2">
+      {quantity > 0
+        ?
+        (<div className="flex justify-between px-4 py-2 bg-gray-200 rounded-md mt-2">
           <p>Value Total:</p>
           <p>{moneyFormat.format(quantity * price)}</p>
-        </div>
+        </div>)
+        :
+        (<div className="bg-transparent h-12"></div>)
       }
+
 
     </div>
   )

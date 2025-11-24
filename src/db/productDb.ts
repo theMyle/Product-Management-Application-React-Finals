@@ -1,4 +1,5 @@
 export interface IProduct {
+    id?: number;
     image: string;
     name: string;
     category: string;
@@ -43,22 +44,18 @@ export const productDb: IProduct[] = [
         quantitySelected: 0
     },
     {
-        image: "none",
-        name: "Smart Phone",
+        image: "/AppleIphone17Pro.webp",
+        name: "Apple Iphone 17 Pro",
         category: "phones",
-        stock: 20,
-        price: 200.78,
-        quantitySelected: 0
-    },
-    {
-        image: "none",
-        name: "Smart Phone",
-        category: "phones",
-        stock: 20,
-        price: 200.78,
+        stock: 55,
+        price: 85990,
         quantitySelected: 0
     },
 ];
+
+for (let i = 0; i < productDb.length; i++) {
+    productDb[i].id = i;
+}
 
 export let productCategories = new Set<string>();
 productDb.forEach(p => productCategories.add(p.category.toLocaleLowerCase()));

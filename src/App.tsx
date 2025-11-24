@@ -5,10 +5,11 @@ import { Button } from "./components/ui/button"
 import { Input } from "./components/ui/input"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./components/ui/select";
 import { productCategories, productDb, type IProduct } from "./db/productDb";
+import { Search, ShoppingCart } from "lucide-react";
 
 function App() {
   const [products, setProducts] = useState<IProduct[]>(productDb);
-  const [cart, setCart] = useState();
+  const [cart, setCart] = useState<IProduct[]>([]);
   const [categories, setCategories] = useState(productCategories);
   const [filter, setFilter] = useState("all");
 
@@ -27,7 +28,26 @@ function App() {
     setSearchBar(searcInput);
   }
 
-  function addToCart(productIdx: number) { }
+  function addToCart(prodId: number, qty: number) {
+    setCart(p => {
+      let newCart = [...p];
+      let productIndex = newCart.findIndex(p => p.id === prodId);
+
+      if (productIndex >= 0) {
+        newCart[productIndex] = {
+          ...newCart[productIndex],
+          quantitySelected: newCart[productIndex].quantitySelected + qty,
+        }
+      } else {
+        const productToAdd = products.find(p => p.id === prodId);
+        if (productToAdd) {
+          newCart.push({ ...productToAdd, quantitySelected: qty });
+        }
+      }
+
+      return newCart;
+    })
+  }
 
   return (
     <div className="flex flex-col items-center h-screen gap-5">
@@ -41,15 +61,25 @@ function App() {
             placeholder="Search"
             className="w-60 rounded-r-none border-r-0"
             onChange={(e) => {
-              e.target.value === "" ? setSearchBar("") : setSearchField(e.target.value)
+              e.target.value === "" ?
+                setSearchBar("") :
+                setSearchField(e.target.value)
             }}
           />
           <Button
             className="rounded-l-none"
             onClick={() => searchOnClick(`${searchField}`)}
-          >Search</Button>
+          >
+            <Search />
+            Search
+          </Button>
         </div>
-        <Button>View Cart (0)</Button>
+        <Button>
+          <ShoppingCart />
+          View Cart (
+          {cart.reduce((acc, curr) => curr.quantitySelected + acc, 0)}
+          )
+        </Button>
       </div>
 
       {/* product list component/container */}
@@ -70,7 +100,10 @@ function App() {
                 <SelectLabel>Product Category</SelectLabel>
                 <SelectItem value="all">All</SelectItem>
                 {[...categories].map(c => (
-                  <SelectItem value={c}>{c.charAt(0).toLocaleUpperCase() + c.slice(1)}</SelectItem>
+                  <SelectItem
+                    value={c}
+                  >{c.charAt(0).toLocaleUpperCase() + c.slice(1)}
+                  </SelectItem>
                 ))}
               </SelectGroup>
             </SelectContent>
@@ -81,7 +114,7 @@ function App() {
 
         <div className="border border-gray-300 px-4 py-6 rounded-xl flex flex-col gap-4">
           <h1 className="font-bold">Product List</h1>
-          <div className="flex  justify-center gap-4 flex-wrap gap-y-10">
+          <div className="flex  justify-center gap-4 flex-wrap gap-y-4">
 
             {products
               .filter(p => filter === "all" ? true : p.category === filter)
@@ -98,12 +131,20 @@ function App() {
                   price={p.price}
                   quantitySelected={p.quantitySelected}
                   quantityOnChange={quantityOnChange}
+                  addToCart={addToCart}
                 />
               ))}
 
           </div>
         </div>
       </div>
+
+      <footer className="flex w-full">
+        <div className="flex justify-between">
+          <p>John Kyle J. Desamparo</p>
+          <p>2025</p>
+        </div>
+      </footer>
     </div>
   )
 }
