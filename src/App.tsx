@@ -4,12 +4,12 @@ import Product from "./components/product"
 import { Button } from "./components/ui/button"
 import { Input } from "./components/ui/input"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./components/ui/select";
-import { productDb, type IProduct } from "./db/productDb";
+import { productCategories, productDb, type IProduct } from "./db/productDb";
 
 function App() {
   const [products, setProducts] = useState<IProduct[]>(productDb);
   const [cart, setCart] = useState();
-  const [cetegories, setCategories] = useState();
+  const [categories, setCategories] = useState(productCategories);
   const [filter, setFilter] = useState("all");
 
   const [searchField, setSearchField] = useState("");
@@ -33,7 +33,7 @@ function App() {
     <div className="flex flex-col items-center h-screen gap-5">
 
       {/* nav bar on top */}
-      <div className="flex justify-between w-full p-4 px-6 shadow-sm items-center static">
+      <div className="sticky top-0 flex justify-between w-full p-4 px-6 shadow-sm items-center bg-white">
         <h1>P.M.A</h1>
         <div className="text-sm flex items-center">
           <Input
@@ -53,7 +53,7 @@ function App() {
       </div>
 
       {/* product list component/container */}
-      <div className="flex flex-col gap-2 w-full px-30 h-32">
+      <div className="flex flex-col gap-2 w-full px-30 pb-5">
 
         <div className="flex justify-between w-full">
           <Select
@@ -69,9 +69,9 @@ function App() {
               <SelectGroup>
                 <SelectLabel>Product Category</SelectLabel>
                 <SelectItem value="all">All</SelectItem>
-                <SelectItem value="laptops">Laptops</SelectItem>
-                <SelectItem value="electronics">Electronics</SelectItem>
-                <SelectItem value="phones">Phones</SelectItem>
+                {[...categories].map(c => (
+                  <SelectItem value={c}>{c.charAt(0).toLocaleUpperCase() + c.slice(1)}</SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -103,11 +103,6 @@ function App() {
 
           </div>
         </div>
-
-        <footer className="py-2">
-          2025
-        </footer>
-
       </div>
     </div>
   )

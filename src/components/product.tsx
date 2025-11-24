@@ -14,12 +14,27 @@ interface productProps {
 };
 
 function Product({ id, image, name, category, stock, price, quantitySelected: quantity, quantityOnChange, addToCart }: productProps) {
+  const moneyFormat = new Intl.NumberFormat('en-PH', {
+    style: 'currency',
+    currency: 'PHP',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+
   return (
     <div>
-      <Card className="pt-0 shadow-xl">
+      <Card
+        className="pt-0 shadow-xl"
+        onClick={() => {
 
-        <div className="bg-gray-300 h-50 w-full flex justify-center items-center rounded-t-xl">
-          <p>Product Image: {image}</p>
+        }}
+      >
+
+        <div className="h-55 flex justify-center items-center rounded-t-xl w-65 overflow-hidden">
+          <img
+            src={image}
+            className="w-full h-auto bg-cover rounded-t-xl"
+          />
         </div>
 
         <CardContent className="w-65 px-4">
@@ -28,9 +43,9 @@ function Product({ id, image, name, category, stock, price, quantitySelected: qu
             <p>Stocks: {stock}</p>
           </div>
 
-          <div className="flex justify-between font-bold">
+          <div className="flex justify-between font-bold h-10">
             <p className="text-wrap">{name}</p>
-            <p>P{price}</p>
+            <p>{moneyFormat.format(price)}</p>
           </div>
 
           {/* starts/rating */}
@@ -43,7 +58,8 @@ function Product({ id, image, name, category, stock, price, quantitySelected: qu
             <div className="flex justify-between items-center gap-5">
 
               <Button
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   if (quantityOnChange) {
                     if (quantity > 0)
                       quantityOnChange(id, quantity - 1)
@@ -53,14 +69,19 @@ function Product({ id, image, name, category, stock, price, quantitySelected: qu
               <p>{quantity}</p>
 
               <Button
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   if (quantityOnChange) {
                     if (quantity < stock)
                       quantityOnChange(id, quantity + 1)
                   }
                 }}>+</Button>
             </div>
-            <Button>Cart</Button>
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >Cart</Button>
           </div>
 
           <div>
@@ -72,7 +93,7 @@ function Product({ id, image, name, category, stock, price, quantitySelected: qu
       {quantity > 0 &&
         <div className="flex justify-between px-4 py-2 bg-green-400 rounded-xl mt-2">
           <p>Value Total:</p>
-          <p>P{(quantity * price).toFixed(3)}</p>
+          <p>{moneyFormat.format(quantity * price)}</p>
         </div>
       }
 
