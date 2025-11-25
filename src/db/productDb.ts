@@ -5,8 +5,10 @@ export interface IProduct {
     category: string;
     stock: number;
     price: number;
+    description: string;
     quantitySelected: number;
     specs: string;
+    rating: number;
 }
 
 export const productDb: IProduct[] = [
@@ -17,10 +19,12 @@ export const productDb: IProduct[] = [
         stock: 100,
         price: 36990,
         quantitySelected: 0,
+        rating: 5,
+        description: "Compact desktop with the M4 chip designed for productivity, media work, and everyday computing.",
         specs: `CPU: M4 Chip 8-core
-        RAM: 16GB
-        Storage: 512GB SSD
-        OS: macOS Sonoma`
+RAM: 16GB
+Storage: 512GB SSD
+OS: macOS Sonoma`,
     },
     {
         image: "/AppleWatchSE.webp",
@@ -29,10 +33,12 @@ export const productDb: IProduct[] = [
         stock: 90,
         price: 9900,
         quantitySelected: 0,
+        rating: 5,
+        description: "Lightweight smartwatch offering essential fitness tracking, notifications, and safety features.",
         specs: `Display: 1.78-inch Retina
-        Connectivity: GPS + Cellular
-        Battery: 18 hours
-        Sensors: Heart rate, SpO2, Accelerometer`
+Connectivity: GPS + Cellular
+Battery: 18 hours
+Sensors: Heart rate, SpO2, Accelerometer`
     },
     {
         image: "/AppleIphone16.webp",
@@ -41,10 +47,12 @@ export const productDb: IProduct[] = [
         stock: 80,
         price: 49990,
         quantitySelected: 0,
+        rating: 4,
+        description: "Premium smartphone with a large OLED display, fast performance, and strong dual-camera system.",
         specs: `Display: 6.7-inch OLED
-        CPU: A18 Bionic
-        Storage: 256GB
-        Camera: 48MP + 12MP Dual`
+CPU: A18 Bionic
+Storage: 256GB
+Camera: 48MP + 12MP Dual`
     },
     {
         image: "/AppleIphone17Pro.webp",
@@ -53,11 +61,14 @@ export const productDb: IProduct[] = [
         stock: 55,
         price: 85990,
         quantitySelected: 0,
+        rating: 4,
+        description: "Flagship model featuring a ProMotion display, advanced triple-camera array, and high-end performance.",
         specs: `Display: 6.7-inch OLED ProMotion
-        CPU: A19 Bionic
-        Storage: 512GB
-        Camera: 48MP + 12MP + 12MP Triple`
+CPU: A19 Bionic
+Storage: 512GB
+Camera: 48MP + 12MP + 12MP Triple`
     },
+
 
 ];
 

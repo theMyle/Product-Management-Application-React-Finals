@@ -1,8 +1,11 @@
-import { Minus, Plus, ShoppingCart } from "lucide-react";
+import { Minus, Plus, ShoppingCart, Star } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { toast } from "sonner";
 import { moneyFormatter } from "@/utils";
+import { useState } from "react";
+import { DialogHeader, Dialog, DialogContent, DialogTitle } from "./ui/dialog";
+import { Label } from "./ui/label";
 
 interface productProps {
   id: number;
@@ -12,18 +15,83 @@ interface productProps {
   stock: number;
   price: number;
   quantitySelected: number;
+  description: string;
+  rating: number;
+  specs: string;
   quantityOnChange?: (prodId: number, newQuantity: number) => void;
   addToCart?: (prodId: number, qty: number) => void;
 };
 
-function Product({ id, image, name, category, stock, price, quantitySelected: quantity, quantityOnChange, addToCart }: productProps) {
+function Product({
+  id,
+  image,
+  name,
+  category,
+  stock,
+  price,
+  quantitySelected: quantity,
+  description,
+  specs,
+  rating,
+  quantityOnChange,
+  addToCart
+}: productProps) {
+  const [open, setOpen] = useState(false);
+
   return (
     <div>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="lg:min-w-2xl">
+          <DialogHeader>
+            <DialogTitle>{name}</DialogTitle>
+          </DialogHeader>
+          <div className="flex items-center gap-4">
+            <img
+              src={image}
+              className="w-80"
+            />
+
+            <div className="flex flex-col gap-4">
+              <div>
+                <Label>Description</Label>
+                <p>{description}</p>
+              </div>
+
+              <div>
+                <Label>Specifications</Label>
+                <p>{specs}</p>
+              </div>
+
+              <div className="flex gap-2 justify-between">
+                <div>
+                  <Label>Category:</Label>
+                  <span> {category}</span>
+                </div>
+
+                <div>
+                  <Label>Stocks:</Label>
+                  <span> {stock}</span>
+                </div>
+
+                <div>
+                  <Label>Rating:</Label>
+                  <span> {rating}/5</span>
+                </div>
+
+                <div>
+                  <Label>Price:</Label>
+                  <span> {moneyFormatter.format(price)}</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <Card
         className="pt-0 shadow-xl"
-        onClick={() => {
-
-        }}
+        onClick={() => { setOpen(p => !p) }}
       >
 
         <div className="h-55 flex justify-center items-center rounded-t-xl w-65 overflow-hidden">
@@ -45,8 +113,10 @@ function Product({ id, image, name, category, stock, price, quantitySelected: qu
           </div>
 
           {/* starts/rating */}
-          <div className="pt-8">
-            <p>Stars</p>
+          <div className="pt-8 flex gap-1 py-2">
+            {Array.from({ length: rating }).map((_, i) => (
+              <Star key={i} size={20} />
+            ))}
           </div>
 
           {/* quantity & add to cart */}

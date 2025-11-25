@@ -8,8 +8,8 @@ import { productCategories, productDb, type IProduct } from "./db/productDb";
 import { Search, ShoppingCart } from "lucide-react";
 import { Dialog, DialogTrigger } from "./components/ui/dialog";
 import { moneyFormatter } from "./utils";
-import CartDialog from "./components/CartDialog";
-import NewItemDialog from "./components/NewItemDialog";
+import CartDialog from "./components/cartDialog";
+import NewItemDialog from "./components/newItemDialog";
 
 function App() {
   const [products, setProducts] = useState<IProduct[]>(productDb);
@@ -72,8 +72,14 @@ function App() {
     setCart(p => p.filter(item => item.id !== prodId));
   }
 
+  function addNewItem(item: IProduct) {
+    categories.add(item.category.toLowerCase());
+    setProducts(p => [...p, { id: products.length, ...item }]);
+  }
+
+
   return (
-    <div className="flex flex-col items-center h-screen gap-5">
+    <div className="flex flex-col items-center h-full gap-5">
 
       {/* nav bar on top */}
       <div className="sticky top-0 flex justify-between w-full p-4 px-6 shadow-sm items-center bg-white">
@@ -82,7 +88,7 @@ function App() {
           <Input
             type="search"
             placeholder="Search"
-            className="w-100 rounded-r-none border-r-0"
+            className="w-50 rounded-r-none border-r-0"
             onChange={(e) => {
               e.target.value === "" ?
                 setSearchBar("") :
@@ -113,12 +119,11 @@ function App() {
             moneyFormatter={moneyFormatter}
           />
         </Dialog>
-
       </div>
       {/* nav bar on top */}
 
       {/* product list component/container */}
-      <div className="flex flex-col gap-2 w-full px-30">
+      <div className="flex flex-col gap-2 w-full px-20">
 
         <div className="flex justify-between w-full">
           <Select
@@ -144,12 +149,11 @@ function App() {
             </SelectContent>
           </Select>
 
-          {/* TODO */}
           <Dialog>
             <DialogTrigger>
               <Button>Add New Product</Button>
             </DialogTrigger>
-            <NewItemDialog />
+            <NewItemDialog addItemOnclick={addNewItem} />
           </Dialog>
         </div>
 
@@ -161,15 +165,18 @@ function App() {
               .filter(p => filter === "all" ? true : p.category === filter)
               .filter(p => searchBar === "" ? true : p.name.toLowerCase().includes(searchBar.toLocaleLowerCase()))
               .filter(p => p.stock > 0)
-              .map((p, idx) => (
+              .map((p) => (
                 <Product
-                  id={idx}
-                  key={idx}
+                  id={p.id!}
+                  key={p.id}
                   image={p.image}
                   name={p.name}
                   category={p.category}
                   stock={p.stock}
                   price={p.price}
+                  description={p.description}
+                  specs={p.specs}
+                  rating={p.rating}
                   quantitySelected={p.quantitySelected}
                   quantityOnChange={quantityOnChange}
                   addToCart={addToCart}
