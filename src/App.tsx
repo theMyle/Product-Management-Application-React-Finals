@@ -73,10 +73,9 @@ function App() {
   }
 
   function addNewItem(item: IProduct) {
-    categories.add(item.category.toLowerCase());
+    setCategories(p => new Set(p).add(item.category.toLowerCase()))
     setProducts(p => [...p, { id: products.length, ...item }]);
   }
-
 
   return (
     <div className="flex flex-col items-center h-full gap-5">
